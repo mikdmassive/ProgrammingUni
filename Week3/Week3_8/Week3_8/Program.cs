@@ -1,9 +1,10 @@
 ﻿int CalculateCentury(int year)
 {
     int Century = year/ 100;
-    Century++;
-
-
+    if (year % 100 != 0)
+    {
+        Century++;
+    }
     return Century;
 }
 //PROMPTS
