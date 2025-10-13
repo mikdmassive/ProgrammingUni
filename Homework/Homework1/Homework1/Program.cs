@@ -83,7 +83,7 @@
                 return Console.ReadLine();
             }
 
-            //main
+            // MAIN CODE WITH LOOP
             CreateAccount();
         }
     }
