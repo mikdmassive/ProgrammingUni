@@ -46,6 +46,7 @@
             while (!valid)
             {
                 password = Prompt("Enter your password");
+                bool ws = false;
                 if (password.Length >= passwordMinLength && password.Length <= passwordMaxLength)//len check
                 {
                     int numCount = 0;
@@ -55,26 +56,54 @@
                         {
                             numCount++;
                         }
+                        else if (char.IsWhiteSpace(password[i]))//space check
+                        {
+                            ws = true;
+                        }
                     }
-                    if (numCount >= passwordMinDigits)//check if valid
-                    {
-                        valid = true;
-                    }
+                    valid = (numCount >= passwordMinDigits&&!ws);//setval
+                    
                 }
                 if (!valid)//if not valid error message
                 {
-                    Console.WriteLine($"Password must be between {passwordMinLength} and {passwordMaxLength} characters and contain at least {passwordMinDigits} digits.\nTry again.");
+                    Console.WriteLine($"Password must be between {passwordMinLength} and {passwordMaxLength} characters and contain at least {passwordMinDigits} digits with no spaces.\nTry again.");
                 }
             }
             return password;
         }
+        public static string ValidateName(string txt)
+        {
+            string name = "";
+            bool valid = false;
+            while (!valid)
+            {
+                name = Prompt(txt);
+                if (name.Length >= 1)
+                {
+                    valid = true;
+                    for (int i = 0; i < name.Length; i++)
+                    {
+                        if(!char.IsLetter(name[i]))
+                        {
+                            valid = false;
+                        }    
+                    }
+                }
+                if (!valid)
+                {
+                    Console.WriteLine("Invalid name, use only letters and be at least one character long.");
+                }
+            }
+            return name;
+                
+        }
         public static void CreateAccount()
         {
 
-            string fname = Prompt("Enter your first name:");
-            string lname = Prompt("Enter your last name:");
+            string fname = ValidateName("Enter your first name:");
+            string lname = ValidateName("Enter your last name:");
 
-            Console.WriteLine($"Create your password, it must...\n1) Be between {passwordMinLength} and {passwordMaxLength} characters \n2) Contain at least {passwordMinDigits} digits.");
+            Console.WriteLine($"Create your password, it must...\n1) Be between {passwordMinLength} and {passwordMaxLength} characters \n2) Contain at least {passwordMinDigits} digits\n3) Contain no spaces");
             string password = PasswordValidationCheck();
             string id = $"PERSON{People.Count}";
             Person newPerson = new Person(id, fname, lname, password);
@@ -239,7 +268,7 @@
                         else
                         {
                             Person Account = People[currentuser];
-                            Console.WriteLine($"You are currently on floor {Account.floor}.");
+                            Console.WriteLine($"The top floor is {topfloor}\nThe bottom floor is {bottomfloor}\nYou are currently on floor {Account.floor}.");
                             string movements = ValidateElevator(Account.floor);
                             Account.floor = SimulateElevator(movements, Account.floor);
                             Console.WriteLine($"You are now on floor {Account.floor}\n");
